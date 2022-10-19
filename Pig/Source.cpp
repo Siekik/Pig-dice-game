@@ -103,6 +103,7 @@ int main() {
 					cout << "\nBot score is: " << currentscore << endl;
 					if (currentscore < 20) reroll = 1;
 					if (currentscore >= 20) reroll = 0;
+					if (currentscore + score >= 100) reroll = 0;
 					if (reroll == 0) {
 						score = score + currentscore;
 					}
