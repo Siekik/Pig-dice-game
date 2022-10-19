@@ -156,7 +156,7 @@ char getUserInput(void) {
 	char menuchoice;
 	int result;
 
-	cout << "\nInput R to roll again or Q to stop: ";
+	cout << "\nInput R to roll again or S to stop: ";
 	cin >> menuchoice;
 
 	switch (menuchoice)
@@ -176,11 +176,11 @@ char getUserInput(void) {
 		break;
 	}
 	//Q's for if player cashes out
-	case('q'): {
+	case('s'): {
 		return 0;
 		break;
 	}
-	case('Q'): {
+	case('S'): {
 		return 0;
 		break;
 	}
