@@ -18,66 +18,69 @@ int main() {
 	int die2value;
 	int score = 0;
 	int currentscore;
+	int bottotal = 0;
+	int playertotal = 0;
 
 	// Odd turn number indicates player turn
 	int turn = 1;
-	
+
 	//Loops while game is still going
 	while (won == 0) {
 		int i = 0;
 		srand(time(0));
 		char start;
-		
+
 		//Player turn:
 		if (turn % 2 != 0) {
 			int reroll = 1;
 			currentscore = 0;
-			
+
 			//Making it wait for the player makes it easier to look at
 			cout << "Enter anything to start your turn.";
 			cin >> start;
 			while (reroll == 1) {
-				
+
 				//Rolling dice and show results
-				
+
 				dievalue = rollDie();
 				die2value = rollDie();
 
 				cout << "You rolled a " << dievalue << " and a " << die2value;
-				
+
 				isTurnScoreLost(dievalue, die2value);
 				isTotalScoreLost(dievalue, die2value);
-				
+
 				//Rections for different game events
 				if (isTurnScoreLost(dievalue, die2value) == false && isTotalScoreLost(dievalue, die2value) == false) {
-				//current score refers to the dice total for the turn. Not the whole game
+					//current score refers to the dice total for the turn. Not the whole game
 					currentscore = currentscore + dievalue + die2value;
 					cout << "\nYour score is: " << currentscore;
 					reroll = getUserInput();
 					if (reroll == 0) {
 						//As long as the player has not rolled a 1 and finishes roll, score is updated
-						score = score + currentscore;
+						playertotal = playertotal + currentscore;
 					}
+				}
+				else if (isTotalScoreLost(dievalue, die2value) != false) {
+					cout << "\nYou rolled two 1's, score reset";
+					playertotal = 0;
+					reroll = 0;
 				}
 				else if (isTurnScoreLost(dievalue, die2value) != false) {
 					cout << "\nYou rolled a 1, you do not score";
 					reroll = 0;
 				}
-				else if (isTotalScoreLost(dievalue, die2value) != false) {
-					cout << "\nYou rolled two 1's, score reset";
-					score = 0;
-					reroll = 0;
-				}
 			}
+			if (playertotal > bottotal) score = playertotal;
 			//Switches turn
 			turn++;
 			//Checks if the game has been won by the player
 			if (isWinningScore(score) == false) {
 				//Updates progress of the game
-				cout << "\nCurrent score: " << score << endl << endl;
+				cout << "\nPlayer score: " << playertotal << endl << "Bot score : " << bottotal << endl << endl;
 			}
 			if (isWinningScore(score) != false) {
-				cout << "YOU WIN! Final score is: " << score << endl;
+				cout << "\nYOU WIN! Final score is: " << playertotal << " vs " << bottotal << endl;
 				return 1;
 			}
 		}
@@ -103,28 +106,29 @@ int main() {
 					cout << "\nBot score is: " << currentscore << endl;
 					if (currentscore < 20) reroll = 1;
 					if (currentscore >= 20) reroll = 0;
-					if (currentscore + score >= 100) reroll = 0;
+					if (currentscore + bottotal >= 100) reroll = 0;
 					if (reroll == 0) {
-						score = score + currentscore;
+						bottotal = bottotal + currentscore;
 					}
+				}
+				else if (isTotalScoreLost(dievalue, die2value) != false) {
+					cout << "\nBot rolled two 1's, score reset";
+					bottotal = 0;
+					reroll = 0;
 				}
 				else if (isTurnScoreLost(dievalue, die2value) != false) {
 					cout << "\nBot rolled a 1, Bot doesn't score";
 					reroll = 0;
 				}
-				else if (isTotalScoreLost(dievalue, die2value) != false) {
-					cout << "\nBot rolled two 1's, score reset";
-					score = 0;
-					reroll = 0;
-				}
 			}
+			if (playertotal < bottotal) score = bottotal;
 			turn++;
 			//checks if game has been won by the bot
 			if (isWinningScore(score) == false) {
-				cout << "\nCurrent score: " << score << endl << endl;
+				cout << "\nPlayer score: " << playertotal << endl << "Bot score : " << bottotal << endl << endl;
 			}
 			if (isWinningScore(score) != false) {
-				cout << "Bot WIN! Final score is: " << score << endl;
+				cout << "\nBot WIN! Final score is: " << bottotal << " vs " << playertotal << endl;
 				return 1;
 			}
 		}
@@ -163,20 +167,20 @@ char getUserInput(void) {
 	switch (menuchoice)
 	{
 	default:
-	//I made the deafault reroll again because it was funny
+		//I made the deafault reroll again because it was funny
 		cout << "Unknown input, rolling again\n";
 		return 1;
 		break;
-	//R's for if the player rerolls
+		//R's for if the player rerolls
 	case('r'): {
 		return 1;
 		break;
-		}
+	}
 	case('R'): {
 		return 1;
 		break;
 	}
-	//Q's for if player cashes out
+			 //Q's for if player cashes out
 	case('s'): {
 		return 0;
 		break;
@@ -188,7 +192,7 @@ char getUserInput(void) {
 	}
 }
 bool isWinningScore(int score) {
-//checks if current score is or is above 100
+	//checks if current score is or is above 100
 	if (score >= 100) {
 		return true;
 	}
