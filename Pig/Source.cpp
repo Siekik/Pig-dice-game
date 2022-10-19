@@ -164,7 +164,7 @@ char getUserInput(void) {
 	default:
 	//I made the deafault reroll again because it was funny
 		cout << "Unknown input, rolling again";
-		cin >> menuchoice;
+		return 1;
 		break;
 	//R's for if the player rerolls
 	case('r'): {
